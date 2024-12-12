@@ -28,23 +28,19 @@ Stretch Goals
 - Improve the UX by disabling the form/button when the game is over and during the pause between questions.
 */
 
+//I want this code to do the same thing as when it starts at 3 and counts down.
+//it's almost doing it.  the loadNewGame function does everything except: allow button to be pressed???
+//change first letter of each work to upper case, makae rest lower case
 import { films } from "/data.js";
 
 // Some useful elements
 const inputGuess = document.getElementById("guess-input");
-
 const messageContainer =
   document.getElementsByClassName("message-container")[0];
-
 const emojiCluesContainer = document.getElementsByClassName(
   "emoji-clues-container"
 )[0];
-
 const form = document.getElementById("guess-input");
-
-// var div = document.createElement('div');
-// emojiCluesContainer.appendChild();
-
 const filmLength = films.length;
 
 console.log(inputGuess.innerText);
@@ -65,6 +61,29 @@ let guesses = 0;
 function addOne(guesses) {
   return guesses + 1;
 }
+
+//create a 3 second timer and reload the page
+const loadNextClue = () => {
+  setTimeout(() => {
+    shuffledArray[addOne(guesses)];
+    emojiCluesContainer.innerHTML =
+      shuffledArray[addOne(guesses)].emoji.join("");
+    remainingGuesses = 3;
+    messageContainer.textContent = `You have ${remainingGuesses} guesses remaining!`;
+
+    //shuffle again after 3 seconds and display these in the console
+    shuffle(films);
+
+    console.log(shuffledArray[addOne(guesses)].emoji);
+    console.log(shuffledArray[addOne(guesses)].title);
+    emojiCluesContainer.innerHTML =
+      shuffledArray[addOne(guesses)].emoji.join("");
+
+    console.log("new items were loaded");
+    //change emojis on screen
+    console.log("3 SECOND TIMER");
+  }, 3000);
+};
 
 //function to return the emojis
 
@@ -95,31 +114,8 @@ function submitBtn(event) {
     messageContainer.textContent = `You have guessed correctly!!`;
     inputGuess.value = "";
 
-    //create a 3 second timer and reload the page
-    setTimeout(() => {
-      // emojiCluesContainer.innerHTML = shuffledArray[addOne(guesses)].emoji.join("");
-
-      shuffledArray[addOne(guesses)];
-
-      emojiCluesContainer.innerHTML = shuffledArray[addOne(guesses)].emoji.join("");
-      remainingGuesses = 3;
-      messageContainer.textContent = `You have ${remainingGuesses} guesses remaining!`;
-
-      //shuffle again after 3 seconds and display these in the console
-   shuffle(films);
-
-      console.log(shuffledArray[addOne(guesses)].emoji);
-      console.log(shuffledArray[addOne(guesses)].title);
-      emojiCluesContainer.innerHTML = shuffledArray[addOne(guesses)].emoji.join("");
-
-      console.log("new items were loaded");
-  
-
-      //change emojis on screen
-      console.log("3 SECOND TIMER");
-    }, "3000");
-
-
+    //enter 3 sec timer here?
+    loadNextClue();
 
     return false; //prevents page refresh
   } else {
@@ -128,10 +124,15 @@ function submitBtn(event) {
 
   //handles if the guesses are less than 0
   if (remainingGuesses <= 0) {
-    messageContainer.textContent = "No guesses remaining!";
-    document.getElementById("submit").disabled = true; // Disable the button
+    messageContainer.textContent =
+      "The film was " + shuffledArray[addOne(guesses)].title;
+    inputGuess.value = "";
+
+    loadNextClue();
+    document.getElementById("submit").disabled = false; // Disable the button
   }
 }
+
 //add event listener to the form
 guess.addEventListener("submit", submitBtn);
 
